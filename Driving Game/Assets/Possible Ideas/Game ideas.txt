@@ -1,0 +1,12 @@
+Race Car game ideas
+
+- Two buttons to play the game
+
+- Possible AI?
+
+- Drfit controls
+
+- boost controls
+
+- Controls for turning, boosting and driving
+ 
