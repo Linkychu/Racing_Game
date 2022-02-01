@@ -9,7 +9,7 @@ public class NewLap : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (LapCount.Instance.LapIntCheck == 5)
+            if (LapCount.Instance.LapIntCheck >= 0.95 * LapCount.Instance.TotalLapCheck )
             {
                 LapCount.Instance.LapFinish();
             }

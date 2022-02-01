@@ -37,6 +37,7 @@ public class Lap : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            Debug.Log("entered");
             int lapCheck = LapCount.Instance.LapIntCheck;
             
             if(lapCheck == LapId)

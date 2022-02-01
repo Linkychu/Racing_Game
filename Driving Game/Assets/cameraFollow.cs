@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,15 +6,28 @@ using UnityEngine;
 public class cameraFollow : MonoBehaviour
 {
     public Transform player;
+
+    [SerializeField] private Vector3 offset;
+
+    [SerializeField] private float speed;
     // Start is called before the first frame update
-    void Start()
+    private void FixedUpdate()
     {
-        
+        CameraTranslation();
+        CameraRotation();
+     
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CameraTranslation()
     {
-        
+        var TargetPos = player.TransformPoint(offset);
+        transform.position = Vector3.Lerp(transform.position, TargetPos, speed * Time.deltaTime);
+    }
+
+    private void CameraRotation()
+    {
+        var direction = player.position - transform.position;
+        var rotation = Quaternion.LookRotation(direction, Vector3.up);
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, speed * Time.deltaTime);
     }
 }

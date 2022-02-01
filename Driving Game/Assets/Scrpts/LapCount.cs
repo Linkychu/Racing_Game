@@ -33,15 +33,13 @@ public class LapCount : MonoBehaviour
 
    public void LapFinish()
    {
-      if (LapIntCheck == TotalLapCheck)
-      {
+    
          LapNumber += 1;
          LapCounter = LapNumber;
          LapInt.text = LapCounter.ToString();
          LapIntCheck = 0;
-         
          LapBox();
-      }
+
    }
    public void LapBox()
    {
