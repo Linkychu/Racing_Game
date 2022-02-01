@@ -13,10 +13,13 @@ public class Lap : MonoBehaviour
     private int LapProof;
 
     public bool isFlag;
+
+   // public Transform lapHead;
     // Start is called before the first frame update
     void Start()
     {
         LapCount.Instance.LapIntCheck = 0;
+        LapId = transform.GetSiblingIndex();
     }
 
     // Update is called once per frame

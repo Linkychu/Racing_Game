@@ -11,6 +11,23 @@ public class cameraFollow : MonoBehaviour
 
     [SerializeField] private float speed;
     // Start is called before the first frame update
+
+    private void Start()
+    {
+        if (GlobalCarChanger.GlobalCarChangerz.ntscar)
+        {
+            offset = new Vector3(0.529999971f, 9.22000027f, -19.5499992f);
+        }
+        
+        checkForPlayer();
+        
+    }
+
+    public void checkForPlayer()
+    {
+        player = GameObject.FindWithTag("Player").GetComponent<Transform>();
+    }
+
     private void FixedUpdate()
     {
         CameraTranslation();

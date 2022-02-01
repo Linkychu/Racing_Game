@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class LapCount : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class LapCount : MonoBehaviour
    private TextMeshProUGUI LapInt;
    public GameObject LapIntString;
    private int LapCounter;
+   public Transform lapHead;
 
 
 
@@ -29,6 +31,7 @@ public class LapCount : MonoBehaviour
    {
       LapInt = LapIntString.GetComponent<TextMeshProUGUI>();
       LapInt.text = LapCounter.ToString();
+      TotalLapCheck = lapHead.childCount - 1;
    }
 
    public void LapFinish()
@@ -40,11 +43,18 @@ public class LapCount : MonoBehaviour
          LapIntCheck = 0;
          LapBox();
 
+         if (LapNumber > 3)
+         {
+            SceneManager.LoadScene(sceneBuildIndex: 2);
+         }
+
    }
    public void LapBox()
    {
       LapIntCheck += 1;
    }
+   
+   
 
  
 }
