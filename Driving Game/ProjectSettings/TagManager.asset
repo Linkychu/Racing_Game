@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Fire
   - AIPlayer
+  - Wheel
+  - Car
+  - WheelParent
+  - ColourAll
   layers:
   - Default
   - TransparentFX

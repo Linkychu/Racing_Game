@@ -22,12 +22,19 @@ public class CarMover : MonoBehaviour
     public TextMeshProUGUI distanceText;
     private Vector3 distanceM;
     
+    private Quaternion originalRot;
+    
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         originalRate = boostRate;
         speedRate = boostRate * 2;
+
+        originalRot = transform.rotation;
+        
+        
+        UpdateCar();
     }
 
     // Update is called once per frame
@@ -100,6 +107,14 @@ public class CarMover : MonoBehaviour
     void Fall()
     {
         rb.AddForce(Vector3.down * gravityMultiplier * 10);
+    }
+    
+    private void UpdateCar()
+    {
+        if ((gameObject.transform.rotation.eulerAngles.z > -450 && gameObject.transform.rotation.eulerAngles.z != 0))
+        {
+            gameObject.transform.rotation = originalRot;
+        }
     }
     
 }

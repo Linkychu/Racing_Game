@@ -47,6 +47,7 @@ public class playerMove : MonoBehaviour
   private bool isBreaking;
   
   [SerializeField]private float boostRate = 6;
+  private Quaternion originalRot;
   
   
     // Start is called before the first frame update
@@ -58,11 +59,15 @@ public class playerMove : MonoBehaviour
         boostMotorForce = motorForce * boostRate;
 
         rb.centerOfMass = centerOfMass.localPosition;
+
+        originalRot = gameObject.GetComponent<Transform>().rotation;
     }
 
     void Update()
     {
         motorForce = Input.GetButton("Fire1") ? boostMotorForce : originalMotorForce;
+
+        UpdateCar();
     }
     private void FixedUpdate()
     {
@@ -143,6 +148,14 @@ public class playerMove : MonoBehaviour
         wheelCollider.GetWorldPose(out pos, out rotation);
         wheel.rotation = rotation;
         wheel.position = pos;
+    }
+
+    private void UpdateCar()
+    {
+        if ((gameObject.transform.rotation.z > -450 && gameObject.transform.rotation.z != 0))
+        {
+            gameObject.transform.rotation = originalRot;
+        }
     }
 
  
