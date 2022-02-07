@@ -17,6 +17,9 @@ public class LapCount : MonoBehaviour
    private int LapCounter;
    public Transform lapHead;
 
+   public Vector3 lastLapPos;
+
+   public Quaternion lastPlayerRot;
 
 
    private void Awake()

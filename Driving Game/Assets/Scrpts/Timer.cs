@@ -41,7 +41,7 @@ public class Timer : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Tab))
         {
-            SceneManager.LoadScene(sceneBuildIndex:1);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         
         StopWatch();

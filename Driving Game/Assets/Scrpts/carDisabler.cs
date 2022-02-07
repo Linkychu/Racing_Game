@@ -27,4 +27,14 @@ public class carDisabler : MonoBehaviour
             _carMover.enabled = true;
         }
     }
+
+    public void CarDisable()
+    {
+        _carMover.enabled = false;
+    }
+
+    public void CarEnable()
+    {
+        _carMover.enabled = true;
+    }
 }

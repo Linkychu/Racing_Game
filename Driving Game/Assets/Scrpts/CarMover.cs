@@ -9,6 +9,7 @@ public class CarMover : MonoBehaviour
     public float speed;
     public float turnSpeed;
     public float gravityMultiplier;
+    
 
     [SerializeField] private float boostRate;
 
@@ -21,9 +22,23 @@ public class CarMover : MonoBehaviour
     private Vector3 distance;
     public TextMeshProUGUI distanceText;
     private Vector3 distanceM;
-    
+    public bool isGrounded;
+    [SerializeField] private float jumpForce = 10;
     private Quaternion originalRot;
-    
+    [SerializeField] private LayerMask TrackLayer;
+    [SerializeField] private LayerMask OutOfBoundsLayer;
+
+  
+
+    private carDisabler _carDisabler;
+
+    [SerializeField] private GameObject blackOut;
+
+    private CollisionDetection _collisionDetection;
+
+    private bool ableToDrive;
+
+    [SerializeField] private Transform groundCheck;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,16 +47,25 @@ public class CarMover : MonoBehaviour
         speedRate = boostRate * 2;
 
         originalRot = transform.rotation;
-        
-        
-        UpdateCar();
+
+        _carDisabler = GetComponent<carDisabler>();
+        //UpdateCar();
+
+        ableToDrive = true;
+
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        Accelerate();
-        Turn();
+        if (ableToDrive)
+        {
+            //UpdateCar();
+            Accelerate();
+            Turn();
+            Jump();
+        }
+        
         Fall();
     }
 
@@ -58,10 +82,13 @@ public class CarMover : MonoBehaviour
        Mathf.Abs(distanceM.magnitude);
 
        distanceText.text = distanceM.magnitude.ToString();
+       
+ 
     }
 
     void Accelerate ()
     {
+     
         if (Input.GetKey(KeyCode.W))
         {
            
@@ -108,13 +135,40 @@ public class CarMover : MonoBehaviour
     {
         rb.AddForce(Vector3.down * gravityMultiplier * 10);
     }
-    
-    private void UpdateCar()
+
+    void Jump()
     {
-        if ((gameObject.transform.rotation.eulerAngles.z > -450 && gameObject.transform.rotation.eulerAngles.z != 0))
+
+        isGrounded = Physics.CheckSphere(transform.position, 1.1f, TrackLayer);
+
+        if (Input.GetButton("Jump"))
         {
-            gameObject.transform.rotation = originalRot;
+            if (isGrounded)
+            {
+                rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+            }
         }
     }
     
+   public IEnumerator flipped()
+    {
+        yield return new WaitForSeconds(5);
+        gameObject.transform.rotation = originalRot;
+    }
+
+   public IEnumerator OutOfBounds()
+    {
+        ableToDrive = false;
+        yield return new WaitForSeconds(2);
+        blackOut.SetActive(true);
+        gameObject.transform.position = LapCount.Instance.lastLapPos;
+        gameObject.transform.rotation = originalRot;
+        yield return new WaitForSeconds(2);
+        blackOut.SetActive(false);
+        yield return new WaitForSeconds(4);
+        ableToDrive = true;
+
+    }
+
+  
 }

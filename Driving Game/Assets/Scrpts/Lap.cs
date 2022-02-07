@@ -14,6 +14,7 @@ public class Lap : MonoBehaviour
 
     public bool isFlag;
 
+   
    // public Transform lapHead;
     // Start is called before the first frame update
     void Start()
@@ -41,6 +42,8 @@ public class Lap : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("entered");
+            LapCount.Instance.lastLapPos = gameObject.transform.position + new Vector3(0, 2, 0);
+            LapCount.Instance.lastPlayerRot = other.gameObject.transform.rotation;
             int lapCheck = LapCount.Instance.LapIntCheck;
             
             if(lapCheck == LapId)
@@ -48,5 +51,7 @@ public class Lap : MonoBehaviour
                 LapCount.Instance.LapBox();
             }
         }
+        
+        
     }
 }
