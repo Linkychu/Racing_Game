@@ -53,4 +53,9 @@ public class GlobalCarChanger : MonoBehaviour
     {
         SceneManager.LoadScene(sceneBuildIndex: 1);
     }
+
+    public void Load2()
+    {
+        SceneManager.LoadScene(sceneBuildIndex: 3);
+    }
 }

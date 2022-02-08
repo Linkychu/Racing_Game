@@ -16,7 +16,7 @@ public class CarMover : MonoBehaviour
     private float speedRate;
     private float originalRate;
     private Rigidbody rb;
-    private bool isDrifting;
+    [SerializeField]private bool isDrifting;
     [SerializeField] private float DriftRate;
     private bool isDriving;
     private Vector3 distance;
@@ -28,7 +28,8 @@ public class CarMover : MonoBehaviour
     [SerializeField] private LayerMask TrackLayer;
     [SerializeField] private LayerMask OutOfBoundsLayer;
 
-  
+
+    [SerializeField] private KeyCode driftKey;
 
     private carDisabler _carDisabler;
 
@@ -39,7 +40,31 @@ public class CarMover : MonoBehaviour
     private bool ableToDrive;
 
     [SerializeField] private Transform groundCheck;
+
+    private CarController _carController;
+
+    private float ratioSpeed;
+
+    private float RegularSpeed;
+
+    public bool Truck;
     // Start is called before the first frame update
+
+    protected void Awake()
+    {
+        _carController = new CarController();
+    }
+
+    protected void OnEnable()
+    {
+        _carController.Car.Enable();
+    }
+
+    protected void OnDisable()
+    {
+        _carController.Car.Disable();
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -53,11 +78,17 @@ public class CarMover : MonoBehaviour
 
         ableToDrive = true;
 
+        ratioSpeed = speed / DriftRate;
+
+        RegularSpeed = speed;
+
+
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+//        Debug.Log(speed);
         if (ableToDrive)
         {
             //UpdateCar();
@@ -73,7 +104,8 @@ public class CarMover : MonoBehaviour
     {
         boostRate = Input.GetButton("Fire1") ? speedRate : originalRate;
 
-        isDrifting = Input.GetKey(KeyCode.Mouse1);
+        isDrifting = Input.GetKey(driftKey) || Input.GetKey(KeyCode.Mouse1);
+        
 
        distance = distance + rb.velocity * Time.deltaTime;
 
@@ -82,51 +114,75 @@ public class CarMover : MonoBehaviour
        Mathf.Abs(distanceM.magnitude);
 
        distanceText.text = distanceM.magnitude.ToString();
+
+
+       if (Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.Joystick1Button4))
+       {
+           StartCoroutine(flipped());
+       }
+ 
        
  
     }
 
     void Accelerate ()
     {
+        speed = isDrifting ? ratioSpeed : RegularSpeed;
+        
+       // Debug.Log(speed);
+        
+        float v = Input.GetAxis("Vertical");
+       
      
-        if (Input.GetKey(KeyCode.W))
+        
+        if (Input.GetKey(KeyCode.W) || v > 0 )
         {
-           
+
             Vector3 forceToAdd = transform.forward;
             forceToAdd.y = 0;
             rb.AddForce(forceToAdd * speed * 10 * boostRate);
         }
-        else if (Input.GetKey(KeyCode.S))
+        
+        else if (Input.GetKey(KeyCode.S) || v < 0)
         {
           
             Vector3 forceToAdd = -transform.forward;
             forceToAdd.y = 0;
             rb.AddForce(forceToAdd * speed * 10 * boostRate);
         }
+        
 
         Vector3 locVel = transform.InverseTransformDirection(rb.velocity);
         locVel = new Vector3(0, locVel.y, locVel.z);
         rb.velocity = new Vector3(transform.TransformDirection(locVel).x, rb.velocity.y, transform.TransformDirection(locVel).z);
+
+       
     }
 
     void Turn ()
     {
-        if (Input.GetKey(KeyCode.A))
+        float h = Input.GetAxis("Horizontal");
+        
+        if (Input.GetKey(KeyCode.A) || h < 0)
         {
-            rb.AddTorque(-Vector3.up * turnSpeed * 10 * boostRate);
+           rb.AddTorque(-Vector3.up * turnSpeed * 10 * boostRate);
 
             if (isDrifting)
-            {
-                rb.AddForce(-Vector3.up * turnSpeed * DriftRate * boostRate);
-            }
+           {
+               rb.AddForce(-Vector3.up * turnSpeed * DriftRate * boostRate);
+              
+           }
+           
         }
-        else if (Input.GetKey(KeyCode.D))
+        
+        else if (Input.GetKey(KeyCode.D) || h > 0)
         {
-            rb.AddTorque(Vector3.up * turnSpeed * 10 * boostRate);
+           rb.AddTorque(Vector3.up  * turnSpeed * 10 * boostRate);
             
             if (isDrifting)
             {
-                rb.AddForce(Vector3.up * turnSpeed * DriftRate * boostRate);
+                
+                rb.AddForce(Vector3.up * h * turnSpeed *DriftRate);
             }
         }
     }
@@ -139,20 +195,37 @@ public class CarMover : MonoBehaviour
     void Jump()
     {
 
-        isGrounded = Physics.CheckSphere(transform.position, 1.1f, TrackLayer);
+        if (!Truck)
+        {
+            isGrounded = Physics.CheckSphere(groundCheck.transform.position, 1, TrackLayer);
+        }
+
+        else
+        {
+            isGrounded = Physics.CheckSphere(groundCheck.transform.position, 1, TrackLayer);
+        }
 
         if (Input.GetButton("Jump"))
         {
             if (isGrounded)
             {
-                rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+                if (!Truck)
+                {
+                    rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+                }
+
+                else
+                {
+                    rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+                }
+                
             }
         }
     }
     
    public IEnumerator flipped()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(1);
         gameObject.transform.rotation = originalRot;
     }
 

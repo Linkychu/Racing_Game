@@ -43,6 +43,12 @@ public class Timer : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+
+        if (Input.GetKey(KeyCode.Joystick1Button3))
+
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
         
         StopWatch();
     }

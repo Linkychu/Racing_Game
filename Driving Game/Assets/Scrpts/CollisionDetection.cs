@@ -44,22 +44,32 @@ public class CollisionDetection : MonoBehaviour
     {
         //Debug.Log("Triggered");
         
-        Debug.Log(other.gameObject.layer);
+        
         if (other.gameObject.layer == 9)
         {
             Debug.Log("yes");
             StartCoroutine(_carMover.OutOfBounds());
         }
-        
+
+       
+    }
+
+    /*private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.gameObject.layer);
+        if (other.gameObject.layer == 7)
+        {
+            _carMover.isGrounded = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        /*if (_carMover.isGrounded)
-        {
-            StartCoroutine(_carMover.flipped()); 
-        }*/
-    }
+        Debug.Log(other.gameObject.layer);
+        _carMover.isGrounded = false;
+    }*/
+
+ 
 
 
    

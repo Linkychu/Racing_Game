@@ -19,6 +19,7 @@ public class LapCount : MonoBehaviour
 
    public Vector3 lastLapPos;
 
+   [SerializeField]private int lapsToComplete = 3;
    public Quaternion lastPlayerRot;
 
 
@@ -46,7 +47,7 @@ public class LapCount : MonoBehaviour
          LapIntCheck = 0;
          LapBox();
 
-         if (LapNumber > 3)
+         if (LapNumber > lapsToComplete)
          {
             SceneManager.LoadScene(sceneBuildIndex: 2);
          }
